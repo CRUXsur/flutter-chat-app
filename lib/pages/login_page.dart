@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:chat/widgets/custom_input.dart';
+import 'package:chat/widgets/logo.dart';
+import 'package:chat/widgets/labels.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -11,10 +13,14 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _Logo(),
+            const Logo(titulo: 'Messenger'),
             _Form(),
-            _Labels(),
-            Text(
+            const Labels(
+              ruta: 'register',
+              titulo: '¿No tienes cuenta?',
+              subTitulo: 'Crea una ahora!',
+            ),
+            const Text(
               'Términos y condiciones de uso',
               style: TextStyle(fontWeight: FontWeight.w200),
             ),
@@ -25,76 +31,49 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class _Logo extends StatelessWidget {
-  const _Logo({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 170,
-        margin: EdgeInsets.only(top: 50),
-        child: Column(
-          children: <Widget>[
-            Image(image: AssetImage('assets/tag-logo.png')),
-            SizedBox(height: 20),
-            Text('Messenger', style: TextStyle(fontSize: 30))
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _Form extends StatefulWidget {
-  _Form({Key? key}) : super(key: key);
+  const _Form({Key? key}) : super(key: key);
 
   @override
   State<_Form> createState() => __FormState();
 }
 
 class __FormState extends State<_Form> {
+  final emailCtrl = TextEditingController();
+  final passCtrl = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 40),
-      padding: EdgeInsets.symmetric(horizontal: 50),
+      margin: const EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: <Widget>[
           //
-          CustomInput(),
+          CustomInput(
+            icon: Icons.mail_outline,
+            placeholder: 'Correo',
+            keyboardType: TextInputType.emailAddress,
+            textController: emailCtrl,
+          ),
+          //
+          CustomInput(
+            icon: Icons.lock_outline,
+            placeholder: 'Contrasena',
+            //borrar para que sea un texto normal
+            //keyboardType: TextInputType.emailAddress,
+            textController: passCtrl,
+            isPassword: true,
+          ),
           //
           // TODO: Crear Boton
-        ],
-      ),
-    );
-  }
-}
-
-class _Labels extends StatelessWidget {
-  const _Labels({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Text('No tienes cuenta?',
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w300)),
-          SizedBox(height: 10),
-          GestureDetector(
-            child: Text('Crea una Ahora!',
-                style: TextStyle(
-                    color: Colors.blue[600],
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
-            onTap: () {
-              //Navigator.pushReplacementNamed(context, this.ruta);
+          ElevatedButton(
+            onPressed: () {
+              print(emailCtrl.text);
+              print(passCtrl.text);
             },
-          )
+            child: null,
+          ),
         ],
       ),
     );
