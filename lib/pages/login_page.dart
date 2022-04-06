@@ -12,21 +12,26 @@ class LoginPage extends StatelessWidget {
       backgroundColor: const Color(0xffF2F2F2),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Logo(titulo: 'Messenger'),
-              _Form(),
-              Labels(
-                ruta: 'register',
-                titulo: '¿No tienes cuenta?',
-                subTitulo: 'Crea una ahora!',
-              ),
-              Text(
-                'Términos y condiciones de uso',
-                style: TextStyle(fontWeight: FontWeight.w200),
-              ),
-            ],
+          //* rebote para IOs y Android
+          physics: const BouncingScrollPhysics(),
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.9,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Logo(titulo: 'Messenger'),
+                _Form(),
+                Labels(
+                  ruta: 'register',
+                  titulo: '¿No tienes cuenta?',
+                  subTitulo: 'Crea una ahora!',
+                ),
+                Text(
+                  'Términos y condiciones de uso',
+                  style: TextStyle(fontWeight: FontWeight.w200),
+                ),
+              ],
+            ),
           ),
         ),
       ),
