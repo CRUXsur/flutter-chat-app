@@ -6,6 +6,8 @@ import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/boton_azul.dart';
 
 class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,8 +79,8 @@ class __FormState extends State<_Form> {
           BotonAzul(
             text: 'Ingrese',
             onPressed: () {
-              print(emailCtrl.text);
-              print(passCtrl.text);
+              //print(emailCtrl.text);
+              //print(passCtrl.text);
             },
           ),
         ],

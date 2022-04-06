@@ -6,6 +6,8 @@ import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/boton_azul.dart';
 
 class RegisterPage extends StatelessWidget {
+  const RegisterPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,9 +87,9 @@ class __FormState extends State<_Form> {
           BotonAzul(
             text: 'Crear cuenta',
             onPressed: () {
-              print(nameCtrl.text);
-              print(emailCtrl.text);
-              print(passCtrl.text);
+              //print(nameCtrl.text);
+              //print(emailCtrl.text);
+              //print(passCtrl.text);
             },
           ),
         ],
