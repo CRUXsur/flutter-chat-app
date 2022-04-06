@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:chat/widgets/custom_input.dart';
 import 'package:chat/widgets/logo.dart';
 import 'package:chat/widgets/labels.dart';
+import 'package:chat/widgets/boton_azul.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -10,21 +11,23 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF2F2F2),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Logo(titulo: 'Messenger'),
-            _Form(),
-            const Labels(
-              ruta: 'register',
-              titulo: '¿No tienes cuenta?',
-              subTitulo: 'Crea una ahora!',
-            ),
-            const Text(
-              'Términos y condiciones de uso',
-              style: TextStyle(fontWeight: FontWeight.w200),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Logo(titulo: 'Messenger'),
+              _Form(),
+              Labels(
+                ruta: 'register',
+                titulo: '¿No tienes cuenta?',
+                subTitulo: 'Crea una ahora!',
+              ),
+              Text(
+                'Términos y condiciones de uso',
+                style: TextStyle(fontWeight: FontWeight.w200),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -66,13 +69,12 @@ class __FormState extends State<_Form> {
             isPassword: true,
           ),
           //
-          // TODO: Crear Boton
-          ElevatedButton(
+          BotonAzul(
+            text: 'Ingrese',
             onPressed: () {
               print(emailCtrl.text);
               print(passCtrl.text);
             },
-            child: null,
           ),
         ],
       ),
