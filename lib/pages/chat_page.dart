@@ -14,6 +14,8 @@ class _ChatPageState extends State<ChatPage> {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
 
+  bool _estaEscribiendo = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +75,14 @@ class _ChatPageState extends State<ChatPage> {
                 controller: _textController,
                 onSubmitted: _handleSubmit,
                 onChanged: (String texto) {
-                  // TODO: cuando hay un valor, para poder postear
+                  setState(() {
+                    //if (texto.trim().length > 0) {
+                    if (texto.trim().isNotEmpty) {
+                      _estaEscribiendo = true;
+                    } else {
+                      _estaEscribiendo = false;
+                    }
+                  });
                 },
                 decoration: const InputDecoration.collapsed(
                   hintText: 'Enviar mensaje',
@@ -87,18 +96,23 @@ class _ChatPageState extends State<ChatPage> {
               child: Platform.isIOS
                   ? CupertinoButton(
                       child: const Text('Enviar'),
-                      onPressed: () {},
+                      onPressed: _estaEscribiendo
+                          ? () => _handleSubmit(_textController.text.trim())
+                          : null,
                     )
                   : Container(
                       margin: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: IconTheme(
-                          data: IconThemeData(color: Colors.blue[400]),
-                          child: IconButton(
-                            highlightColor: Colors.transparent,
-                            splashColor: Colors.transparent,
-                            icon: const Icon(Icons.send),
-                            onPressed: () {},
-                          )),
+                        data: IconThemeData(color: Colors.blue[400]),
+                        child: IconButton(
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                          icon: const Icon(Icons.send),
+                          onPressed: _estaEscribiendo
+                              ? () => _handleSubmit(_textController.text.trim())
+                              : null,
+                        ),
+                      ),
                     ),
             ),
           ],
@@ -112,5 +126,9 @@ class _ChatPageState extends State<ChatPage> {
     print(texto);
     _textController.clear();
     _focusNode.requestFocus();
+
+    setState(() {
+      _estaEscribiendo = false;
+    });
   }
 }
