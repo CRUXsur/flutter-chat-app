@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:chat/widgets/chat_message.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({Key? key}) : super(key: key);
@@ -13,6 +14,14 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
+
+  List<ChatMessage> _messages = [
+    ChatMessage(texto: 'hola mundo', uid: '123'),
+    ChatMessage(texto: 'hola mundo', uid: '12'),
+    ChatMessage(texto: 'hola mundo', uid: '123'),
+    ChatMessage(texto: 'hola mundo', uid: '12'),
+    ChatMessage(texto: 'hola mundo', uid: '123'),
+  ];
 
   bool _estaEscribiendo = false;
 
@@ -44,8 +53,8 @@ class _ChatPageState extends State<ChatPage> {
             Flexible(
               child: ListView.builder(
                 physics: const BouncingScrollPhysics(),
-                //
-                itemBuilder: (_, i) => Text('$i'),
+                itemCount: _messages.length,
+                itemBuilder: (_, i) => _messages[i],
                 reverse: true,
               ),
             ),
@@ -126,6 +135,12 @@ class _ChatPageState extends State<ChatPage> {
     print(texto);
     _textController.clear();
     _focusNode.requestFocus();
+
+    final newMessage = ChatMessage(
+      uid: '123',
+      texto: texto,
+    );
+    _messages.insert(0, newMessage);
 
     setState(() {
       _estaEscribiendo = false;
