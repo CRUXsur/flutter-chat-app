@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       //persona tiene un token valido;
       // funciona    : va a usuarios
       // NO funciona : va a login
-      initialRoute: 'chat',
+      initialRoute: 'login',
       routes: appRoutes,
     );
   }
