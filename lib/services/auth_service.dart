@@ -128,6 +128,36 @@ class AuthService with ChangeNotifier {
     }
   }
 
+  //  esto sera capaz de verificar el token que esta almacenado en el
+  // storage de mi telefono, y verificar si todavia sigue siendo valido
+  // contra el backend!
+  // el metodo que nos permitira hacer eso es:
+  Future<bool> isLoggedIn() async {
+    var isLoggedIn = Uri.parse('${Environment.apiUrl}/login/renew');
+    final token = await _storage.read(key: 'token') ?? '';
+    print(token);
+
+    final resp = await http.get(isLoggedIn,
+        // mi header personalizado 'x-token'
+        headers: {'Content-Type': 'application/json', 'x-token': token});
+
+    print(resp.body);
+
+    if (resp.statusCode == 200) {
+      //lo parseamos
+      final loginResponse = loginResponseFromJson(resp.body);
+      //establecemos el usuario nuevo
+      usuario = loginResponse.usuario;
+      //grabamos el nuevo token, nueva vida a ese token
+      await _guardarToken(loginResponse.token);
+      return true;
+    } else {
+      //borro el token, ya no sirve!
+      logout();
+      return false;
+    }
+  }
+
   Future _guardarToken(String token) async {
     return await _storage.write(key: 'token', value: token);
   }
