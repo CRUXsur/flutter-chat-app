@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
-//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:chat/global/environment.dart';
 
@@ -23,7 +23,7 @@ class AuthService with ChangeNotifier {
   // creo la instancia del Storage
   // privado  porque solo funcionara dentro del AuthService
   //y no se podra poner afuera
-//  final _storage = new FlutterSecureStorage();
+  final _storage = new FlutterSecureStorage();
 
   //bloquear el boton de ingrese p/ k no se pueda hacer doble posteo
   bool _autenticando = false; //propiedad indica cuando se esta autenticando
@@ -38,6 +38,30 @@ class AuthService with ChangeNotifier {
     _autenticando = valor;
     notifyListeners(); //notifica a todos los k estan escuchando _autenticando
     //para que se redibuje
+  }
+
+  //Metodos estaticos que me sirven para obtener y borrar el token haciendo
+  //referencia al AuthService
+  //Para poder acceder al token desde afuera => necesito
+  //crear getters & setters estaticos
+  // Getters del token de forma estática
+  static Future<String?> getToken() async {
+    //como es estatica yo no tengo acceso a las propiedades de la clase
+    //como el _storage..no tengo accaeso a esto!
+    //entonces me tengo que crear nuevamente la instancia
+    final _storage = new FlutterSecureStorage();
+    //y ahora puedo leer el token!
+    final token = await _storage.read(key: 'token');
+    return token;
+  }
+
+  // de la misma manera hacer para borra el tken!
+  // podre hacer logout de cualquier parte..
+  // no necesariamente con el pprovider
+  //solo haciendo referencia al authService....
+  static Future<void> deleteToken() async {
+    final _storage = new FlutterSecureStorage();
+    await _storage.delete(key: 'token');
   }
 
   //tengo que crear un metodo  future recibe email y password
@@ -67,11 +91,19 @@ class AuthService with ChangeNotifier {
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
       usuario = loginResponse.usuario;
-      //GUardo el token! en el dispositivo (lugar seguro)
-//      await this._guardarToken(loginResponse.token);
+      //GUardo(lo grabo) el token! en el dispositivo (lugar seguro)
+      await _guardarToken(loginResponse.token);
       return true;
     } else {
       return false;
     }
+  }
+
+  Future _guardarToken(String token) async {
+    return await _storage.write(key: 'token', value: token);
+  }
+
+  Future logout() async {
+    await _storage.delete(key: 'token');
   }
 }
