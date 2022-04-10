@@ -57,6 +57,7 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -81,13 +82,17 @@ class __FormState extends State<_Form> {
           //
           BotonAzul(
             text: 'Ingrese',
-            onPressed: () {
-              print(emailCtrl.text);
-              print(passCtrl.text);
-              final authService =
-                  Provider.of<AuthService>(context, listen: false);
-              authService.login(emailCtrl.text, passCtrl.text);
-            },
+            onPressed: authService.autenticando
+                ? null
+                : () {
+                    //quita el focus donde sea que este y oculto el teclado
+                    FocusScope.of(context).unfocus();
+                    //print(emailCtrl.text);
+                    //print(passCtrl.text);
+
+                    authService.login(
+                        emailCtrl.text.trim(), passCtrl.text.trim());
+                  },
           ),
         ],
       ),
