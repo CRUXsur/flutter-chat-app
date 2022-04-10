@@ -41,7 +41,7 @@ class AuthService with ChangeNotifier {
   }
 
   //tengo que crear un metodo  future recibe email y password
-  Future login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     autenticando = true;
 
     //var url = Uri.parse('http://10.0.2.2:3000/api/login');
@@ -67,7 +67,7 @@ class AuthService with ChangeNotifier {
     if (resp.statusCode == 200) {
       final loginResponse = loginResponseFromJson(resp.body);
       usuario = loginResponse.usuario;
-      //GUardo el token! en el dispositivo
+      //GUardo el token! en el dispositivo (lugar seguro)
 //      await this._guardarToken(loginResponse.token);
       return true;
     } else {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/widgets/custom_input.dart';
 import 'package:chat/widgets/logo.dart';
 import 'package:chat/widgets/labels.dart';
@@ -84,14 +85,28 @@ class __FormState extends State<_Form> {
             text: 'Ingrese',
             onPressed: authService.autenticando
                 ? null
-                : () {
+                : () async {
                     //quita el focus donde sea que este y oculto el teclado
                     FocusScope.of(context).unfocus();
+                    //print('botonAzul - Ingrese');
                     //print(emailCtrl.text);
                     //print(passCtrl.text);
-
-                    authService.login(
+                    //usamos nuestro provider para mandar a llamar esto
+                    //listen:false para que no intente redibujar el widget
+                    //solo necesito la referencia, para llamar el authservice.login
+                    //final authService =
+                    //    Provider.of<AuthService>(context, listen: false);
+                    final loginOk = await authService.login(
                         emailCtrl.text.trim(), passCtrl.text.trim());
+                    if (loginOk) {
+                      // TODO: Conectar a nuestro socket server
+                      //socketService.connect();
+                      Navigator.pushReplacementNamed(context, 'usuarios');
+                    } else {
+                      // Mostara alerta
+                      mostrarAlerta(context, 'Login incorrecto',
+                          'Revise sus credenciales nuevamente');
+                    }
                   },
           ),
         ],
