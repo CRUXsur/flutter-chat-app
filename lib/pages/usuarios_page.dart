@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+//import 'package:chat/services/socket_service.dart';
+import 'package:chat/services/auth_service.dart';
+
 import 'package:chat/models/usuario.dart';
 
 class UsuariosPage extends StatefulWidget {
@@ -22,18 +27,32 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   @override
   Widget build(BuildContext context) {
+    //instancia de mi provider para poner el nombre arriba de la app
+    final authService = Provider.of<AuthService>(context);
+    //final socketService = Provider.of<SocketService>(context);
+    //ahora podemos extarer el usuario; a una variable que es facil de usar
+    final usuario = authService.usuario;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'mi nombre',
-          style: TextStyle(color: Colors.black87),
+        title: Text(
+          usuario?.nombre ?? 'Sin Nombre',
+          style: const TextStyle(color: Colors.black87),
         ),
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.exit_to_app, color: Colors.black87),
           //boton para salir! cierra aplicacion
-          onPressed: () {},
+          onPressed: () {
+            //TODO: desconectarnos de socket server
+            //socketService.disconnect();
+            //sacamos al usuario de alli, esta pantalla
+            Navigator.pushReplacementNamed(context, 'login');
+            //este hace el logout, borra la informacion de alli
+            //hago la referencia la metodo estatico
+            AuthService.deleteToken();
+          },
         ),
         actions: <Widget>[
           Container(

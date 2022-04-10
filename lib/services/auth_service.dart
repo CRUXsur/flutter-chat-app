@@ -23,7 +23,7 @@ class AuthService with ChangeNotifier {
   // creo la instancia del Storage
   // privado  porque solo funcionara dentro del AuthService
   //y no se podra poner afuera
-  final _storage = new FlutterSecureStorage();
+  final _storage = const FlutterSecureStorage();
 
   //bloquear el boton de ingrese p/ k no se pueda hacer doble posteo
   bool _autenticando = false; //propiedad indica cuando se esta autenticando
@@ -49,7 +49,7 @@ class AuthService with ChangeNotifier {
     //como es estatica yo no tengo acceso a las propiedades de la clase
     //como el _storage..no tengo accaeso a esto!
     //entonces me tengo que crear nuevamente la instancia
-    final _storage = new FlutterSecureStorage();
+    const _storage = FlutterSecureStorage();
     //y ahora puedo leer el token!
     final token = await _storage.read(key: 'token');
     return token;
@@ -60,7 +60,7 @@ class AuthService with ChangeNotifier {
   // no necesariamente con el pprovider
   //solo haciendo referencia al authService....
   static Future<void> deleteToken() async {
-    final _storage = new FlutterSecureStorage();
+    const _storage = FlutterSecureStorage();
     await _storage.delete(key: 'token');
   }
 
@@ -113,7 +113,7 @@ class AuthService with ChangeNotifier {
 
     final resp = await http.post(urlRegister,
         body: jsonEncode(data), headers: {'Content-Type': 'application/json'});
-    print(resp.body);
+    //print(resp.body);
     autenticando = false;
 
     if (resp.statusCode == 200) {
@@ -135,13 +135,13 @@ class AuthService with ChangeNotifier {
   Future<bool> isLoggedIn() async {
     var isLoggedIn = Uri.parse('${Environment.apiUrl}/login/renew');
     final token = await _storage.read(key: 'token') ?? '';
-    print(token);
+    //print(token);
 
     final resp = await http.get(isLoggedIn,
         // mi header personalizado 'x-token'
         headers: {'Content-Type': 'application/json', 'x-token': token});
 
-    print(resp.body);
+    //print(resp.body);
 
     if (resp.statusCode == 200) {
       //lo parseamos
