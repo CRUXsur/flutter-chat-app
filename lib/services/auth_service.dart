@@ -6,13 +6,13 @@ import 'package:http/http.dart' as http;
 
 import 'package:chat/global/environment.dart';
 
-//import 'package:chat/models/login_response.dart';
+import 'package:chat/models/login_response.dart';
 import 'package:chat/models/usuario.dart';
 
 class AuthService with ChangeNotifier {
-  //Usuario? usuario;
+  Usuario? usuario;
 
-  Future login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     //este es el payload que quiero mandar al backend
     final data = {
       'email': email,
@@ -25,6 +25,19 @@ class AuthService with ChangeNotifier {
       body: jsonEncode(data),
       headers: {'Content-Type': 'application/json'},
     );
-    print(resp.body);
+    //esta es la respuesta
+    //print(resp.body);
+    //necesitamos mapear la respuesta a un tipo de modelo propio en
+    //nuestra aplicacion
+    if (resp.statusCode == 200) {
+      final loginResponse = loginResponseFromJson(resp.body);
+      usuario = loginResponse.usuario;
+
+      //await this._guardarToken(loginResponse.token);
+
+      return true;
+    } else {
+      return false;
+    }
   }
 }
