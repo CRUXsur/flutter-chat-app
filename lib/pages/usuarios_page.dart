@@ -35,9 +35,11 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          usuario?.nombre ?? 'Sin Nombre',
-          style: const TextStyle(color: Colors.black87),
+        title: Center(
+          child: Text(
+            usuario?.nombre ?? 'Sin Nombre',
+            style: const TextStyle(color: Colors.black87),
+          ),
         ),
         elevation: 1,
         backgroundColor: Colors.white,
