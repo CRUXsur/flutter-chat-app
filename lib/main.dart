@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import 'package:chat/services/auth_service.dart';
 import 'package:chat/routes/routes.dart';
 
 void main() => runApp(const MyApp());
@@ -9,15 +12,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Chat App',
-      //en la pantalla de loadingPage, me sirve para determinar si la
-      //persona tiene un token valido;
-      // funciona    : va a usuarios
-      // NO funciona : va a login
-      initialRoute: 'login',
-      routes: appRoutes,
+    return MultiProvider(
+      providers: [
+        //creo una instancia global de mi authservice
+        //que me sirve para manejarlo como un singleton
+        //si no tb va a  notificarle a los widget necesarios
+        //cuando yo quiera redibujarlos
+        ChangeNotifierProvider(create: (_) => AuthService()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Chat App',
+        //en la pantalla de loadingPage, me sirve para determinar si la
+        //persona tiene un token valido;
+        // funciona    : va a usuarios
+        // NO funciona : va a login
+        initialRoute: 'login',
+        routes: appRoutes,
+      ),
     );
   }
 }
