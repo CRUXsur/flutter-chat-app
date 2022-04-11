@@ -59,7 +59,9 @@ class _UsuariosPageState extends State<UsuariosPage> {
         actions: <Widget>[
           Container(
             margin: EdgeInsets.only(right: 10),
-            child: Icon(Icons.check_circle, color: Colors.blue[400]),
+            child: (socketService.serverStatus == ServerStatus.Online)
+                ? Icon(Icons.check_circle, color: Colors.blue[400])
+                : Icon(Icons.offline_bolt, color: Colors.red),
             // child: Icon( Icons.offline_bolt, color: Colors.red ),
           )
         ],
