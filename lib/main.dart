@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:chat/services/auth_service.dart';
+import 'package:chat/services/socket_service.dart';
 import 'package:chat/routes/routes.dart';
 
 void main() => runApp(const MyApp());
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
         //si no tb va a  notificarle a los widget necesarios
         //cuando yo quiera redibujarlos
         ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProvider(create: (_) => SocketService()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
