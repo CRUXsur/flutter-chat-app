@@ -20,13 +20,22 @@ class SocketService with ChangeNotifier {
   IO.Socket get socket => _socket;
   Function get emit => _socket.emit;
 
-  void connect() {
+  //! async : debemos esperar a que se conecte antes de hacer otra cosa
+  //!
+  void connect() async {
+    //! espera a que tengas la verificacion del token!!!! que lo hayas
+    //! leido del storage y lo obtienes...una vez lo tengas......
+    final token = await AuthService.getToken();
+
     // Dart client
+    //!......tengo que conectarme mandando ese token!
     _socket = IO.io(Environment.socketUrl, {
       //Propiedades
       'transports': ['websocket'],
       'autoConnect': true,
-      'forceNew': true //forzar a una nueva coneccion
+      'forceNew': true, //forzar a una nueva coneccion
+      //! aqui mando el tkoen , por extraHeaders
+      'extraHeaders': {'x-token': token}
     });
 
     _socket.on('connect', (_) {
