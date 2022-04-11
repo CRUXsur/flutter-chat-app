@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-//import 'package:chat/services/socket_service.dart';
+import 'package:chat/services/socket_service.dart';
 import 'package:chat/services/auth_service.dart';
 
 import 'package:chat/models/usuario.dart';
@@ -29,7 +29,7 @@ class _UsuariosPageState extends State<UsuariosPage> {
   Widget build(BuildContext context) {
     //instancia de mi provider para poner el nombre arriba de la app
     final authService = Provider.of<AuthService>(context);
-    //final socketService = Provider.of<SocketService>(context);
+    final socketService = Provider.of<SocketService>(context);
     //ahora podemos extarer el usuario; a una variable que es facil de usar
     final usuario = authService.usuario;
 
@@ -47,8 +47,8 @@ class _UsuariosPageState extends State<UsuariosPage> {
           icon: const Icon(Icons.exit_to_app, color: Colors.black87),
           //boton para salir! cierra aplicacion
           onPressed: () {
-            //TODO: desconectarnos de socket server
-            //socketService.disconnect();
+            //desconectarnos de socket server
+            socketService.disconnect();
             //sacamos al usuario de alli, esta pantalla
             Navigator.pushReplacementNamed(context, 'login');
             //este hace el logout, borra la informacion de alli
