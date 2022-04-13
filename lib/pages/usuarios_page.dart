@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:chat/services/usuarios_service.dart';
+import 'package:chat/services/chat_service.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/services/auth_service.dart';
 
@@ -113,6 +114,14 @@ class _UsuariosPageState extends State<UsuariosPage> {
             color: usuario.online ? Colors.green[300] : Colors.red,
             borderRadius: BorderRadius.circular(100)),
       ),
+      onTap: () {
+        //print(usuario.nombre);
+        //print(usuario.email);
+        //tener la instancia de mi chat service
+        final chatService = Provider.of<ChatService>(context, listen: false);
+        chatService.usuarioPara = usuario;
+        Navigator.pushNamed(context, 'chat');
+      },
     );
   }
 
