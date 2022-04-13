@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:chat/services/auth_service.dart';
 import 'package:chat/services/chat_service.dart';
+import 'package:chat/services/socket_service.dart';
 import 'package:chat/widgets/chat_message.dart';
 
 class ChatPage extends StatefulWidget {
@@ -18,14 +20,27 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   final _textController = TextEditingController();
   final _focusNode = FocusNode();
 
+  late ChatService chatService;
+  late SocketService socketService; //este porque dispone del emit!
+  late AuthService authService; // necesito saber quien soy yo
+
   List<ChatMessage> _messages = [];
 
   bool _estaEscribiendo = false;
 
+  // ChatService chatService; ....lo inicializo en el initState
+  @override
+  void initState() {
+    chatService = Provider.of<ChatService>(context, listen: false);
+    socketService = Provider.of<SocketService>(context, listen: false);
+    authService = Provider.of<AuthService>(context, listen: false);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     //* importo el servicio; dejamos liste:en true
-    final chatService = Provider.of<ChatService>(context);
+    //final chatService = Provider.of<ChatService>(context);
     final usuarioPara = chatService.usuarioPara;
 
     return Scaffold(
@@ -138,7 +153,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   _handleSubmit(String texto) {
     if (texto.isEmpty) return;
     //
-    print(texto);
+    //print(texto);
     _textController.clear();
     _focusNode.requestFocus();
 
@@ -155,6 +170,13 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
     setState(() {
       _estaEscribiendo = false;
+    });
+
+    //*
+    this.socketService.emit('mensaje-personal', {
+      'de': authService.usuario!.uid,
+      'para': chatService.usuarioPara.uid,
+      'mensaje': texto
     });
   }
 
