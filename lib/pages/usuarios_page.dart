@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'package:chat/services/usuarios_service.dart';
 import 'package:chat/services/socket_service.dart';
 import 'package:chat/services/auth_service.dart';
 
@@ -19,11 +20,21 @@ class _UsuariosPageState extends State<UsuariosPage> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
-  final usuarios = [
+  final usuarioService = UsuariosService();
+
+  List<Usuario>? usuarios = [];
+
+/*   final usuarios = [
     Usuario(uid: '1', nombre: 'María', email: 't1@test.com', online: true),
     Usuario(uid: '2', nombre: 'Melissa', email: 't2@test.com', online: false),
     Usuario(uid: '3', nombre: 'Fernando', email: 't3@test.com', online: true),
-  ];
+  ]; */
+
+  @override
+  void initState() {
+    _cargarUsuarios();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +92,9 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   ListView _listViewUsuarios() {
     return ListView.separated(
-      itemBuilder: (_, i) => _usuarioListTile(usuarios[i]),
+      itemBuilder: (_, i) => _usuarioListTile(usuarios![i]),
       separatorBuilder: (_, i) => Divider(),
-      itemCount: usuarios.length,
+      itemCount: usuarios!.length,
     );
   }
 
@@ -106,7 +117,13 @@ class _UsuariosPageState extends State<UsuariosPage> {
   }
 
   _cargarUsuarios() async {
-    await Future.delayed(const Duration(milliseconds: 1000));
+    //usuarioService.getUsuarios();
+    //* rellenamos los usuarios
+    usuarios = await usuarioService.getUsuarios();
+
+    setState(() {});
+
+    //await Future.delayed(const Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
