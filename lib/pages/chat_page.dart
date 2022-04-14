@@ -34,7 +34,31 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     chatService = Provider.of<ChatService>(context, listen: false);
     socketService = Provider.of<SocketService>(context, listen: false);
     authService = Provider.of<AuthService>(context, listen: false);
+
+    //! Tengo hacer un llamado para que este escuchando el evento que
+    //! pusimos en nuestro backend,cuando alguien me emita 'mensaje-personal'
+    //! cuando el servidor me emita eso, mediante el socket
+    socketService.socket.on('mensaje-personal', _escucharMensaje);
+
     super.initState();
+  }
+
+  void _escucharMensaje(dynamic payload) {
+    //print(payload['mesaje']);
+    //print('Tengo mensaje! $data');
+    ChatMessage message = ChatMessage(
+      texto: payload['mensaje'],
+      uid: payload['de'],
+      animationController: AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 300),
+      ),
+    );
+    setState(() {
+      _messages.insert(0, message);
+    });
+    //! hago andar la animacion
+    message.animationController.forward();
   }
 
   @override
@@ -173,7 +197,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
     });
 
     //*
-    this.socketService.emit('mensaje-personal', {
+    socketService.emit('mensaje-personal', {
       'de': authService.usuario!.uid,
       'para': chatService.usuarioPara.uid,
       'mensaje': texto
@@ -182,12 +206,12 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    //TODO: Off del socket
-
     for (ChatMessage message in _messages) {
       message.animationController.dispose();
     }
-
+    //! si me salgo de la conversacion, entonces dejo de escuchar
+    //! para que no gaste mi credito de data de mi cel
+    socketService.socket.off('mensaje-personal');
     super.dispose();
   }
 }
